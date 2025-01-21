@@ -1,0 +1,155 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": "(+/-)-syringaresinol", "label": "(+/-)-syringaresinol", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "rel-diethyl 2,2\u0027-((((1s,3ar,4s,6ar)-tetrahydro-1h,3h-furo[3,4-c]furan-1,4-diyl)bis(2,6-dimethoxy-4,1-phenylene))bis(oxy))diacetate", "label": "rel-diethyl 2,2\u0027-((((1s,3ar,4s,6ar)-tetrahydro-1h,3h-furo[3,4-c]furan-1,4-diyl)bis(2,6-dimethoxy-4,1-phenylene))bis(oxy))diacetate", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "syringic aldehyde", "label": "syringic aldehyde", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "4-hydroxy-3,5-dimethoxycinnamic acid methyl ester", "label": "4-hydroxy-3,5-dimethoxycinnamic acid methyl ester", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "sinapinic acid", "label": "sinapinic acid", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "syringenin", "label": "syringenin", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "(2e,2\u0027e)-3,3\u0027-(furan-2,5-diyl)diacrylic acid", "label": "(2e,2\u0027e)-3,3\u0027-(furan-2,5-diyl)diacrylic acid", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "(e,e)-3-[5-(2-methoxycarbonyl-vinyl)-furan-2-yl]-acrylic acid methyl ester", "label": "(e,e)-3-[5-(2-methoxycarbonyl-vinyl)-furan-2-yl]-acrylic acid methyl ester", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "dimethyl 3,3\u0027-(furan-2,5-diyl)dipropionate", "label": "dimethyl 3,3\u0027-(furan-2,5-diyl)dipropionate", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "3,3\u0027-(naphthalene-1,4-diyl)dipropanoic acid", "label": "3,3\u0027-(naphthalene-1,4-diyl)dipropanoic acid", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "5-hydroxymethyl-2-furfuraldehyde", "label": "5-hydroxymethyl-2-furfuraldehyde", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "c18h22o5", "label": "c18h22o5", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "c18h20o5", "label": "c18h20o5", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "2,5-diformylfurane", "label": "2,5-diformylfurane", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "ethanol", "label": "ethanol", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "levulinic acid", "label": "levulinic acid", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "4-oxopentanoic acid ethyl ester", "label": "4-oxopentanoic acid ethyl ester", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "5-methyl-dihydro-furan-2-one", "label": "5-methyl-dihydro-furan-2-one", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "ethyl n-valerate", "label": "ethyl n-valerate", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "valeric acid", "label": "valeric acid", "shape": "dot", "size": 10}]);
+                  edges = new vis.DataSet([{"from": "(+/-)-syringaresinol", "to": "rel-diethyl 2,2\u0027-((((1s,3ar,4s,6ar)-tetrahydro-1h,3h-furo[3,4-c]furan-1,4-diyl)bis(2,6-dimethoxy-4,1-phenylene))bis(oxy))diacetate", "width": 1}, {"from": "(+/-)-syringaresinol", "to": "syringic aldehyde", "width": 4}, {"from": "(+/-)-syringaresinol", "to": "4-hydroxy-3,5-dimethoxycinnamic acid methyl ester", "width": 2}, {"from": "(+/-)-syringaresinol", "to": "sinapinic acid", "width": 3}, {"from": "(+/-)-syringaresinol", "to": "syringenin", "width": 1}, {"from": "(2e,2\u0027e)-3,3\u0027-(furan-2,5-diyl)diacrylic acid", "to": "(e,e)-3-[5-(2-methoxycarbonyl-vinyl)-furan-2-yl]-acrylic acid methyl ester", "width": 1}, {"from": "(2e,2\u0027e)-3,3\u0027-(furan-2,5-diyl)diacrylic acid", "to": "dimethyl 3,3\u0027-(furan-2,5-diyl)dipropionate", "width": 2}, {"from": "(2e,2\u0027e)-3,3\u0027-(furan-2,5-diyl)diacrylic acid", "to": "3,3\u0027-(naphthalene-1,4-diyl)dipropanoic acid", "width": 5}, {"from": "(2e,2\u0027e)-3,3\u0027-(furan-2,5-diyl)diacrylic acid", "to": "5-hydroxymethyl-2-furfuraldehyde", "width": 2}, {"from": "(2e,2\u0027e)-3,3\u0027-(furan-2,5-diyl)diacrylic acid", "to": "c18h22o5", "width": 4}, {"from": "(2e,2\u0027e)-3,3\u0027-(furan-2,5-diyl)diacrylic acid", "to": "c18h20o5", "width": 3}, {"from": "c18h22o5", "to": "3,3\u0027-(naphthalene-1,4-diyl)dipropanoic acid", "width": 1}, {"from": "c18h22o5", "to": "2,5-diformylfurane", "width": 5}, {"from": "c18h22o5", "to": "dimethyl 3,3\u0027-(furan-2,5-diyl)dipropionate", "width": 2}, {"from": "c18h22o5", "to": "(e,e)-3-[5-(2-methoxycarbonyl-vinyl)-furan-2-yl]-acrylic acid methyl ester", "width": 3}, {"from": "c18h22o5", "to": "5-hydroxymethyl-2-furfuraldehyde", "width": 6}, {"from": "c18h22o5", "to": "c18h20o5", "width": 1}, {"from": "(e,e)-3-[5-(2-methoxycarbonyl-vinyl)-furan-2-yl]-acrylic acid methyl ester", "to": "dimethyl 3,3\u0027-(furan-2,5-diyl)dipropionate", "width": 1}, {"from": "(e,e)-3-[5-(2-methoxycarbonyl-vinyl)-furan-2-yl]-acrylic acid methyl ester", "to": "c18h20o5", "width": 2}, {"from": "(e,e)-3-[5-(2-methoxycarbonyl-vinyl)-furan-2-yl]-acrylic acid methyl ester", "to": "3,3\u0027-(naphthalene-1,4-diyl)dipropanoic acid", "width": 4}, {"from": "(e,e)-3-[5-(2-methoxycarbonyl-vinyl)-furan-2-yl]-acrylic acid methyl ester", "to": "5-hydroxymethyl-2-furfuraldehyde", "width": 3}, {"from": "5-hydroxymethyl-2-furfuraldehyde", "to": "c18h20o5", "width": 5}, {"from": "5-hydroxymethyl-2-furfuraldehyde", "to": "ethanol", "width": 1}, {"from": "5-hydroxymethyl-2-furfuraldehyde", "to": "dimethyl 3,3\u0027-(furan-2,5-diyl)dipropionate", "width": 4}, {"from": "5-hydroxymethyl-2-furfuraldehyde", "to": "levulinic acid", "width": 1}, {"from": "5-hydroxymethyl-2-furfuraldehyde", "to": "3,3\u0027-(naphthalene-1,4-diyl)dipropanoic acid", "width": 7}, {"from": "5-hydroxymethyl-2-furfuraldehyde", "to": "2,5-diformylfurane", "width": 1}, {"from": "5-hydroxymethyl-2-furfuraldehyde", "to": "4-oxopentanoic acid ethyl ester", "width": 1}, {"from": "syringenin", "to": "sinapinic acid", "width": 1}, {"from": "syringenin", "to": "syringic aldehyde", "width": 2}, {"from": "syringenin", "to": "rel-diethyl 2,2\u0027-((((1s,3ar,4s,6ar)-tetrahydro-1h,3h-furo[3,4-c]furan-1,4-diyl)bis(2,6-dimethoxy-4,1-phenylene))bis(oxy))diacetate", "width": 2}, {"from": "syringenin", "to": "4-hydroxy-3,5-dimethoxycinnamic acid methyl ester", "width": 1}, {"from": "5-methyl-dihydro-furan-2-one", "to": "ethanol", "width": 1}, {"from": "5-methyl-dihydro-furan-2-one", "to": "levulinic acid", "width": 1}, {"from": "5-methyl-dihydro-furan-2-one", "to": "ethyl n-valerate", "width": 1}, {"from": "5-methyl-dihydro-furan-2-one", "to": "4-oxopentanoic acid ethyl ester", "width": 1}, {"from": "5-methyl-dihydro-furan-2-one", "to": "valeric acid", "width": 1}, {"from": "4-oxopentanoic acid ethyl ester", "to": "valeric acid", "width": 1}, {"from": "4-oxopentanoic acid ethyl ester", "to": "ethyl n-valerate", "width": 1}, {"from": "4-oxopentanoic acid ethyl ester", "to": "ethanol", "width": 1}, {"from": "4-oxopentanoic acid ethyl ester", "to": "levulinic acid", "width": 1}, {"from": "sinapinic acid", "to": "syringic aldehyde", "width": 1}, {"from": "sinapinic acid", "to": "rel-diethyl 2,2\u0027-((((1s,3ar,4s,6ar)-tetrahydro-1h,3h-furo[3,4-c]furan-1,4-diyl)bis(2,6-dimethoxy-4,1-phenylene))bis(oxy))diacetate", "width": 4}, {"from": "sinapinic acid", "to": "4-hydroxy-3,5-dimethoxycinnamic acid methyl ester", "width": 1}, {"from": "dimethyl 3,3\u0027-(furan-2,5-diyl)dipropionate", "to": "c18h20o5", "width": 1}, {"from": "dimethyl 3,3\u0027-(furan-2,5-diyl)dipropionate", "to": "3,3\u0027-(naphthalene-1,4-diyl)dipropanoic acid", "width": 3}, {"from": "dimethyl 3,3\u0027-(furan-2,5-diyl)dipropionate", "to": "2,5-diformylfurane", "width": 2}, {"from": "c18h20o5", "to": "2,5-diformylfurane", "width": 4}, {"from": "c18h20o5", "to": "3,3\u0027-(naphthalene-1,4-diyl)dipropanoic acid", "width": 2}, {"from": "ethanol", "to": "ethyl n-valerate", "width": 1}, {"from": "ethanol", "to": "valeric acid", "width": 1}, {"from": "rel-diethyl 2,2\u0027-((((1s,3ar,4s,6ar)-tetrahydro-1h,3h-furo[3,4-c]furan-1,4-diyl)bis(2,6-dimethoxy-4,1-phenylene))bis(oxy))diacetate", "to": "syringic aldehyde", "width": 5}, {"from": "rel-diethyl 2,2\u0027-((((1s,3ar,4s,6ar)-tetrahydro-1h,3h-furo[3,4-c]furan-1,4-diyl)bis(2,6-dimethoxy-4,1-phenylene))bis(oxy))diacetate", "to": "4-hydroxy-3,5-dimethoxycinnamic acid methyl ester", "width": 3}, {"from": "2,5-diformylfurane", "to": "3,3\u0027-(naphthalene-1,4-diyl)dipropanoic acid", "width": 6}, {"from": "ethyl n-valerate", "to": "valeric acid", "width": 1}, {"from": "ethyl n-valerate", "to": "levulinic acid", "width": 1}, {"from": "levulinic acid", "to": "valeric acid", "width": 1}, {"from": "4-hydroxy-3,5-dimethoxycinnamic acid methyl ester", "to": "syringic aldehyde", "width": 2}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

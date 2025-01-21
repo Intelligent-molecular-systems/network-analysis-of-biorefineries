@@ -1,0 +1,6 @@
+Reactant	Product	Number of Reaction Steps
+chemical_1; chemical_2	chemical_3; chemical_4; chemical_5	3
+chemical_1; chemical_2; chemical_3	chemical_4	10
+chemical_1	chemical_4; chemical_5
+chemical_1	chemical_4; chemical_5	1
+chemical_2; chemical_3	chemical_4; chemical_5	1

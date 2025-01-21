@@ -1,0 +1,250 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 600px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": "6-deoxy-l-galactose", "label": "6-deoxy-l-galactose", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "2,5-dimethylfuran", "label": "2,5-dimethylfuran", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "c17h16o3", "label": "c17h16o3", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "2-[1-(5-methyl-furan-2-yl)-meth-(e)-ylidene]-cyclohexanone", "label": "2-[1-(5-methyl-furan-2-yl)-meth-(e)-ylidene]-cyclohexanone", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "2,6-bis-((\u03be)-5-methyl-furfurylidene)-cyclohexanone", "label": "2,6-bis-((\u03be)-5-methyl-furfurylidene)-cyclohexanone", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "c11h14o2", "label": "c11h14o2", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "2-hydroxy-1,2-bis(5-methyl-2-furanyl)-ethanone", "label": "2-hydroxy-1,2-bis(5-methyl-2-furanyl)-ethanone", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "2-(5\u0027-methylfurfuryliden)cyclopentanon", "label": "2-(5\u0027-methylfurfuryliden)cyclopentanon", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "5-methylfurfural", "label": "5-methylfurfural", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "c12h14o2", "label": "c12h14o2", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "5-methyl-2-furfuryl acetate", "label": "5-methyl-2-furfuryl acetate", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "c15h14o3", "label": "c15h14o3", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "c16h16o3", "label": "c16h16o3", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "c12h16o2", "label": "c12h16o2", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "2-hydroxymethyl-5-methylfuran", "label": "2-hydroxymethyl-5-methylfuran", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "2-(2-methoxyphenoxy)-acetophenone", "label": "2-(2-methoxyphenoxy)-acetophenone", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "2-methoxy-phenol", "label": "2-methoxy-phenol", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "\u03b1-bromoacetophenone", "label": "\u03b1-bromoacetophenone", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "acetophenone", "label": "acetophenone", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "(\u00b1)-1-(1-phenylethyl)pyrrolidine", "label": "(\u00b1)-1-(1-phenylethyl)pyrrolidine", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "benzoic acid", "label": "benzoic acid", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "2-(2-methoxyphenoxy)-1-phenylethan-1-ol", "label": "2-(2-methoxyphenoxy)-1-phenylethan-1-ol", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "1,2,3,4-tetrahydrophenazine", "label": "1,2,3,4-tetrahydrophenazine", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "3-chlorocatechol", "label": "3-chlorocatechol", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "2-aminocyclohexanol", "label": "2-aminocyclohexanol", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "2-amino-phenol", "label": "2-amino-phenol", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "benzene-1,2-diol", "label": "benzene-1,2-diol", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "5-hydroxymethyl-2-furfuraldehyde", "label": "5-hydroxymethyl-2-furfuraldehyde", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "c9h15no3", "label": "c9h15no3", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "c18h20o5", "label": "c18h20o5", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "d-fructose", "label": "d-fructose", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "cellulose", "label": "cellulose", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "ethanol", "label": "ethanol", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "d-glucose", "label": "d-glucose", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "\u03b1-cellulose", "label": "\u03b1-cellulose", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "dimethyl 3,3\u0027-(furan-2,5-diyl)dipropionate", "label": "dimethyl 3,3\u0027-(furan-2,5-diyl)dipropionate", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "lactose", "label": "lactose", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "levulinic acid", "label": "levulinic acid", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "3,3\u0027-(naphthalene-1,4-diyl)dipropanoic acid", "label": "3,3\u0027-(naphthalene-1,4-diyl)dipropanoic acid", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "(2e,2\u0027e)-3,3\u0027-(furan-2,5-diyl)diacrylic acid", "label": "(2e,2\u0027e)-3,3\u0027-(furan-2,5-diyl)diacrylic acid", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "l-rhamnose", "label": "l-rhamnose", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "2,5-diformylfurane", "label": "2,5-diformylfurane", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "(e,e)-3-[5-(2-methoxycarbonyl-vinyl)-furan-2-yl]-acrylic acid methyl ester", "label": "(e,e)-3-[5-(2-methoxycarbonyl-vinyl)-furan-2-yl]-acrylic acid methyl ester", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "4-oxopentanoic acid ethyl ester", "label": "4-oxopentanoic acid ethyl ester", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "furan-2,5-dicarboxylic acid", "label": "furan-2,5-dicarboxylic acid", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "c18h22o5", "label": "c18h22o5", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "furfural", "label": "furfural", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "d-glucomethylose", "label": "d-glucomethylose", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "5-methyl-dihydro-furan-2-one", "label": "5-methyl-dihydro-furan-2-one", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "methanol", "label": "methanol", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "ethyl n-valerate", "label": "ethyl n-valerate", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "valeric acid", "label": "valeric acid", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "c20h14o4", "label": "c20h14o4", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "furan-2,5-dicarboxylic acid dimethyl ester", "label": "furan-2,5-dicarboxylic acid dimethyl ester", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "c14h12o5", "label": "c14h12o5", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "c14h14o5", "label": "c14h14o5", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "2-phenoxy-1-phenylethanol", "label": "2-phenoxy-1-phenylethanol", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "2-phenoxy-1-phenylethanone", "label": "2-phenoxy-1-phenylethanone", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "c14h10(2)h2o2", "label": "c14h10(2)h2o2", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "1,2,3,4,4a,5,10,10a-octahydro-phenazine", "label": "1,2,3,4,4a,5,10,10a-octahydro-phenazine", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "tetradecahydro-phenazine", "label": "tetradecahydro-phenazine", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "1,2,3,4,6,7,8,9-octahydrophenazine", "label": "1,2,3,4,6,7,8,9-octahydrophenazine", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "naphthalene-1,4-dicarboxylic acid", "label": "naphthalene-1,4-dicarboxylic acid", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "2-(trimethylsilyl)phenyl trifluoromethanesulfonate", "label": "2-(trimethylsilyl)phenyl trifluoromethanesulfonate", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "anthranilic acid", "label": "anthranilic acid", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "formic acid", "label": "formic acid", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "hydrogen", "label": "hydrogen", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "d-mannose", "label": "d-mannose", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "methyl lactate", "label": "methyl lactate", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "lactic acid", "label": "lactic acid", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "phenol", "label": "phenol", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "ethylene glycol", "label": "ethylene glycol", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "cyclohexanol", "label": "cyclohexanol", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "(benzyloxy)benzene", "label": "(benzyloxy)benzene", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "diphenylether", "label": "diphenylether", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "cyclohexanone", "label": "cyclohexanone", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "pyrrolidine", "label": "pyrrolidine", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "rel-methyl (2s,3s)-2-(4-(2-ethoxy-2-oxoethoxy)-3-methoxyphenyl)-7-methoxy-5-((e)-3-methoxy-3-oxoprop-1-en-1-yl)-2,3-dihydrobenzofuran-3-carboxylate", "label": "rel-methyl (2s,3s)-2-(4-(2-ethoxy-2-oxoethoxy)-3-methoxyphenyl)-7-methoxy-5-((e)-3-methoxy-3-oxoprop-1-en-1-yl)-2,3-dihydrobenzofuran-3-carboxylate", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "(\u00b1)-trans-dehydrodiferulic acid dimethyl ester", "label": "(\u00b1)-trans-dehydrodiferulic acid dimethyl ester", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "rel-methyl (2s,3s)-2-(4-(2-ethoxy-2-oxoethoxy)-3-methoxyphenyl)-5-formyl-7-methoxy-2,3-dihydrobenzofuran-3-carboxylate", "label": "rel-methyl (2s,3s)-2-(4-(2-ethoxy-2-oxoethoxy)-3-methoxyphenyl)-5-formyl-7-methoxy-2,3-dihydrobenzofuran-3-carboxylate", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "3-(4-hydroxy-3-methoxyphenyl)acrylic acid", "label": "3-(4-hydroxy-3-methoxyphenyl)acrylic acid", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "methyl ferulate", "label": "methyl ferulate", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "4-hydroxy-3,5-dimethoxycinnamic acid methyl ester", "label": "4-hydroxy-3,5-dimethoxycinnamic acid methyl ester", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "rel-diethyl 2,2\u0027-((((1s,3ar,4s,6ar)-tetrahydro-1h,3h-furo[3,4-c]furan-1,4-diyl)bis(2,6-dimethoxy-4,1-phenylene))bis(oxy))diacetate", "label": "rel-diethyl 2,2\u0027-((((1s,3ar,4s,6ar)-tetrahydro-1h,3h-furo[3,4-c]furan-1,4-diyl)bis(2,6-dimethoxy-4,1-phenylene))bis(oxy))diacetate", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "(+/-)-syringaresinol", "label": "(+/-)-syringaresinol", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "sinapinic acid", "label": "sinapinic acid", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "syringenin", "label": "syringenin", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "syringic aldehyde", "label": "syringic aldehyde", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "benzoic acid methyl ester", "label": "benzoic acid methyl ester", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "propylene glycol", "label": "propylene glycol", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "c12h19no2", "label": "c12h19no2", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "cyclohexanone-2-ol", "label": "cyclohexanone-2-ol", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "c8h11no4", "label": "c8h11no4", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "c11h19no4", "label": "c11h19no4", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "c11h17no4", "label": "c11h17no4", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "c11h21no4", "label": "c11h21no4", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "c10h13no5", "label": "c10h13no5", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "cyclohexane", "label": "cyclohexane", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "1-(3,4-dimethoxyphenyl)-2-(methoxyphenoxy)propane-1,3-diol", "label": "1-(3,4-dimethoxyphenyl)-2-(methoxyphenoxy)propane-1,3-diol", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "d-xylose", "label": "d-xylose", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "c12h14o", "label": "c12h14o", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "1,4-dimethyl-1,4-dihydro-1,4-epoxynaphthalene", "label": "1,4-dimethyl-1,4-dihydro-1,4-epoxynaphthalene", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "2-hydroxyresorcinol", "label": "2-hydroxyresorcinol", "shape": "dot", "size": 10}, {"color": "#97c2fc", "id": "3-methocycatechol", "label": "3-methocycatechol", "shape": "dot", "size": 10}]);
+                  edges = new vis.DataSet([{"from": "6-deoxy-l-galactose", "to": "2,5-dimethylfuran", "width": 4}, {"from": "6-deoxy-l-galactose", "to": "c17h16o3", "width": 2}, {"from": "6-deoxy-l-galactose", "to": "2-[1-(5-methyl-furan-2-yl)-meth-(e)-ylidene]-cyclohexanone", "width": 2}, {"from": "6-deoxy-l-galactose", "to": "2,6-bis-((\u03be)-5-methyl-furfurylidene)-cyclohexanone", "width": 2}, {"from": "6-deoxy-l-galactose", "to": "c11h14o2", "width": 2}, {"from": "6-deoxy-l-galactose", "to": "2-hydroxy-1,2-bis(5-methyl-2-furanyl)-ethanone", "width": 2}, {"from": "6-deoxy-l-galactose", "to": "2-(5\u0027-methylfurfuryliden)cyclopentanon", "width": 2}, {"from": "6-deoxy-l-galactose", "to": "5-methylfurfural", "width": 1}, {"from": "6-deoxy-l-galactose", "to": "c12h14o2", "width": 2}, {"from": "6-deoxy-l-galactose", "to": "5-methyl-2-furfuryl acetate", "width": 3}, {"from": "6-deoxy-l-galactose", "to": "c15h14o3", "width": 2}, {"from": "6-deoxy-l-galactose", "to": "c16h16o3", "width": 2}, {"from": "6-deoxy-l-galactose", "to": "c12h16o2", "width": 2}, {"from": "6-deoxy-l-galactose", "to": "2-hydroxymethyl-5-methylfuran", "width": 2}, {"from": "2-(2-methoxyphenoxy)-acetophenone", "to": "2-methoxy-phenol", "width": 1}, {"from": "2-(2-methoxyphenoxy)-acetophenone", "to": "\u03b1-bromoacetophenone", "width": 1}, {"from": "2-(2-methoxyphenoxy)-acetophenone", "to": "acetophenone", "width": 1}, {"from": "2-(2-methoxyphenoxy)-acetophenone", "to": "(\u00b1)-1-(1-phenylethyl)pyrrolidine", "width": 1}, {"from": "2-(2-methoxyphenoxy)-acetophenone", "to": "benzoic acid", "width": 1}, {"from": "2-(2-methoxyphenoxy)-acetophenone", "to": "2-(2-methoxyphenoxy)-1-phenylethan-1-ol", "width": 1}, {"from": "1,2,3,4-tetrahydrophenazine", "to": "3-chlorocatechol", "width": 2}, {"from": "1,2,3,4-tetrahydrophenazine", "to": "2-aminocyclohexanol", "width": 1}, {"from": "1,2,3,4-tetrahydrophenazine", "to": "2-amino-phenol", "width": 1}, {"from": "1,2,3,4-tetrahydrophenazine", "to": "benzene-1,2-diol", "width": 1}, {"from": "5-hydroxymethyl-2-furfuraldehyde", "to": "c9h15no3", "width": 1}, {"from": "5-hydroxymethyl-2-furfuraldehyde", "to": "c18h20o5", "width": 5}, {"from": "5-hydroxymethyl-2-furfuraldehyde", "to": "d-fructose", "width": 1}, {"from": "5-hydroxymethyl-2-furfuraldehyde", "to": "2,5-dimethylfuran", "width": 1}, {"from": "5-hydroxymethyl-2-furfuraldehyde", "to": "cellulose", "width": 1}, {"from": "5-hydroxymethyl-2-furfuraldehyde", "to": "2-hydroxymethyl-5-methylfuran", "width": 1}, {"from": "5-hydroxymethyl-2-furfuraldehyde", "to": "ethanol", "width": 1}, {"from": "5-hydroxymethyl-2-furfuraldehyde", "to": "d-glucose", "width": 1}, {"from": "5-hydroxymethyl-2-furfuraldehyde", "to": "5-methylfurfural", "width": 1}, {"from": "5-hydroxymethyl-2-furfuraldehyde", "to": "\u03b1-cellulose", "width": 1}, {"from": "5-hydroxymethyl-2-furfuraldehyde", "to": "dimethyl 3,3\u0027-(furan-2,5-diyl)dipropionate", "width": 4}, {"from": "5-hydroxymethyl-2-furfuraldehyde", "to": "lactose", "width": 1}, {"from": "5-hydroxymethyl-2-furfuraldehyde", "to": "levulinic acid", "width": 1}, {"from": "5-hydroxymethyl-2-furfuraldehyde", "to": "3,3\u0027-(naphthalene-1,4-diyl)dipropanoic acid", "width": 7}, {"from": "5-hydroxymethyl-2-furfuraldehyde", "to": "(2e,2\u0027e)-3,3\u0027-(furan-2,5-diyl)diacrylic acid", "width": 2}, {"from": "5-hydroxymethyl-2-furfuraldehyde", "to": "l-rhamnose", "width": 1}, {"from": "5-hydroxymethyl-2-furfuraldehyde", "to": "2,5-diformylfurane", "width": 1}, {"from": "5-hydroxymethyl-2-furfuraldehyde", "to": "(e,e)-3-[5-(2-methoxycarbonyl-vinyl)-furan-2-yl]-acrylic acid methyl ester", "width": 3}, {"from": "5-hydroxymethyl-2-furfuraldehyde", "to": "4-oxopentanoic acid ethyl ester", "width": 1}, {"from": "5-hydroxymethyl-2-furfuraldehyde", "to": "furan-2,5-dicarboxylic acid", "width": 1}, {"from": "5-hydroxymethyl-2-furfuraldehyde", "to": "c18h22o5", "width": 6}, {"from": "lactose", "to": "d-fructose", "width": 1}, {"from": "lactose", "to": "furfural", "width": 1}, {"from": "lactose", "to": "5-methylfurfural", "width": 1}, {"from": "2-(5\u0027-methylfurfuryliden)cyclopentanon", "to": "l-rhamnose", "width": 2}, {"from": "2-(5\u0027-methylfurfuryliden)cyclopentanon", "to": "5-methylfurfural", "width": 1}, {"from": "2-(5\u0027-methylfurfuryliden)cyclopentanon", "to": "d-glucomethylose", "width": 2}, {"from": "5-methyl-dihydro-furan-2-one", "to": "ethanol", "width": 1}, {"from": "5-methyl-dihydro-furan-2-one", "to": "levulinic acid", "width": 1}, {"from": "5-methyl-dihydro-furan-2-one", "to": "methanol", "width": 1}, {"from": "5-methyl-dihydro-furan-2-one", "to": "ethyl n-valerate", "width": 1}, {"from": "5-methyl-dihydro-furan-2-one", "to": "4-oxopentanoic acid ethyl ester", "width": 1}, {"from": "5-methyl-dihydro-furan-2-one", "to": "cellulose", "width": 1}, {"from": "5-methyl-dihydro-furan-2-one", "to": "valeric acid", "width": 1}, {"from": "c12h16o2", "to": "5-methylfurfural", "width": 1}, {"from": "c12h16o2", "to": "l-rhamnose", "width": 2}, {"from": "c12h16o2", "to": "d-glucomethylose", "width": 2}, {"from": "c20h14o4", "to": "furan-2,5-dicarboxylic acid", "width": 4}, {"from": "c20h14o4", "to": "furan-2,5-dicarboxylic acid dimethyl ester", "width": 3}, {"from": "c20h14o4", "to": "c14h12o5", "width": 2}, {"from": "c20h14o4", "to": "c14h14o5", "width": 1}, {"from": "\u03b1-bromoacetophenone", "to": "2-phenoxy-1-phenylethanol", "width": 2}, {"from": "\u03b1-bromoacetophenone", "to": "benzoic acid", "width": 1}, {"from": "\u03b1-bromoacetophenone", "to": "2-phenoxy-1-phenylethanone", "width": 1}, {"from": "\u03b1-bromoacetophenone", "to": "c14h10(2)h2o2", "width": 2}, {"from": "2-aminocyclohexanol", "to": "3-chlorocatechol", "width": 2}, {"from": "2-aminocyclohexanol", "to": "1,2,3,4,4a,5,10,10a-octahydro-phenazine", "width": 1}, {"from": "2-aminocyclohexanol", "to": "tetradecahydro-phenazine", "width": 1}, {"from": "2-aminocyclohexanol", "to": "benzene-1,2-diol", "width": 1}, {"from": "2-aminocyclohexanol", "to": "1,2,3,4,6,7,8,9-octahydrophenazine", "width": 1}, {"from": "furan-2,5-dicarboxylic acid dimethyl ester", "to": "c14h12o5", "width": 1}, {"from": "furan-2,5-dicarboxylic acid dimethyl ester", "to": "furan-2,5-dicarboxylic acid", "width": 1}, {"from": "furan-2,5-dicarboxylic acid dimethyl ester", "to": "c14h14o5", "width": 2}, {"from": "furan-2,5-dicarboxylic acid dimethyl ester", "to": "naphthalene-1,4-dicarboxylic acid", "width": 3}, {"from": "furan-2,5-dicarboxylic acid dimethyl ester", "to": "methanol", "width": 1}, {"from": "c14h12o5", "to": "furan-2,5-dicarboxylic acid", "width": 2}, {"from": "c14h12o5", "to": "naphthalene-1,4-dicarboxylic acid", "width": 2}, {"from": "c14h12o5", "to": "c14h14o5", "width": 1}, {"from": "c14h12o5", "to": "2-(trimethylsilyl)phenyl trifluoromethanesulfonate", "width": 1}, {"from": "c14h12o5", "to": "anthranilic acid", "width": 1}, {"from": "d-glucose", "to": "formic acid", "width": 1}, {"from": "d-glucose", "to": "cellulose", "width": 1}, {"from": "d-glucose", "to": "\u03b1-cellulose", "width": 1}, {"from": "d-glucose", "to": "hydrogen", "width": 1}, {"from": "d-glucose", "to": "d-mannose", "width": 1}, {"from": "d-glucose", "to": "methyl lactate", "width": 1}, {"from": "d-glucose", "to": "d-fructose", "width": 1}, {"from": "d-glucose", "to": "lactic acid", "width": 1}, {"from": "2-(2-methoxyphenoxy)-1-phenylethan-1-ol", "to": "acetophenone", "width": 1}, {"from": "2-(2-methoxyphenoxy)-1-phenylethan-1-ol", "to": "(\u00b1)-1-(1-phenylethyl)pyrrolidine", "width": 1}, {"from": "2-(2-methoxyphenoxy)-1-phenylethan-1-ol", "to": "2-methoxy-phenol", "width": 1}, {"from": "phenol", "to": "2-phenoxy-1-phenylethanone", "width": 1}, {"from": "phenol", "to": "ethylene glycol", "width": 1}, {"from": "phenol", "to": "2-methoxy-phenol", "width": 1}, {"from": "phenol", "to": "cyclohexanol", "width": 1}, {"from": "phenol", "to": "(benzyloxy)benzene", "width": 1}, {"from": "phenol", "to": "2-phenoxy-1-phenylethanol", "width": 1}, {"from": "phenol", "to": "c14h10(2)h2o2", "width": 2}, {"from": "phenol", "to": "diphenylether", "width": 1}, {"from": "phenol", "to": "cyclohexanone", "width": 1}, {"from": "phenol", "to": "pyrrolidine", "width": 1}, {"from": "rel-methyl (2s,3s)-2-(4-(2-ethoxy-2-oxoethoxy)-3-methoxyphenyl)-7-methoxy-5-((e)-3-methoxy-3-oxoprop-1-en-1-yl)-2,3-dihydrobenzofuran-3-carboxylate", "to": "(\u00b1)-trans-dehydrodiferulic acid dimethyl ester", "width": 1}, {"from": "rel-methyl (2s,3s)-2-(4-(2-ethoxy-2-oxoethoxy)-3-methoxyphenyl)-7-methoxy-5-((e)-3-methoxy-3-oxoprop-1-en-1-yl)-2,3-dihydrobenzofuran-3-carboxylate", "to": "rel-methyl (2s,3s)-2-(4-(2-ethoxy-2-oxoethoxy)-3-methoxyphenyl)-5-formyl-7-methoxy-2,3-dihydrobenzofuran-3-carboxylate", "width": 1}, {"from": "rel-methyl (2s,3s)-2-(4-(2-ethoxy-2-oxoethoxy)-3-methoxyphenyl)-7-methoxy-5-((e)-3-methoxy-3-oxoprop-1-en-1-yl)-2,3-dihydrobenzofuran-3-carboxylate", "to": "3-(4-hydroxy-3-methoxyphenyl)acrylic acid", "width": 3}, {"from": "rel-methyl (2s,3s)-2-(4-(2-ethoxy-2-oxoethoxy)-3-methoxyphenyl)-7-methoxy-5-((e)-3-methoxy-3-oxoprop-1-en-1-yl)-2,3-dihydrobenzofuran-3-carboxylate", "to": "methyl ferulate", "width": 2}, {"from": "valeric acid", "to": "4-oxopentanoic acid ethyl ester", "width": 1}, {"from": "valeric acid", "to": "ethanol", "width": 1}, {"from": "valeric acid", "to": "methanol", "width": 1}, {"from": "valeric acid", "to": "ethyl n-valerate", "width": 1}, {"from": "valeric acid", "to": "levulinic acid", "width": 1}, {"from": "4-hydroxy-3,5-dimethoxycinnamic acid methyl ester", "to": "rel-diethyl 2,2\u0027-((((1s,3ar,4s,6ar)-tetrahydro-1h,3h-furo[3,4-c]furan-1,4-diyl)bis(2,6-dimethoxy-4,1-phenylene))bis(oxy))diacetate", "width": 3}, {"from": "4-hydroxy-3,5-dimethoxycinnamic acid methyl ester", "to": "(+/-)-syringaresinol", "width": 2}, {"from": "4-hydroxy-3,5-dimethoxycinnamic acid methyl ester", "to": "sinapinic acid", "width": 1}, {"from": "4-hydroxy-3,5-dimethoxycinnamic acid methyl ester", "to": "syringenin", "width": 1}, {"from": "4-hydroxy-3,5-dimethoxycinnamic acid methyl ester", "to": "syringic aldehyde", "width": 2}, {"from": "2-phenoxy-1-phenylethanol", "to": "2-phenoxy-1-phenylethanone", "width": 1}, {"from": "2-phenoxy-1-phenylethanol", "to": "(\u00b1)-1-(1-phenylethyl)pyrrolidine", "width": 1}, {"from": "2-phenoxy-1-phenylethanol", "to": "benzoic acid methyl ester", "width": 1}, {"from": "\u03b1-cellulose", "to": "lactic acid", "width": 1}, {"from": "\u03b1-cellulose", "to": "ethylene glycol", "width": 1}, {"from": "\u03b1-cellulose", "to": "propylene glycol", "width": 1}, {"from": "(+/-)-syringaresinol", "to": "rel-diethyl 2,2\u0027-((((1s,3ar,4s,6ar)-tetrahydro-1h,3h-furo[3,4-c]furan-1,4-diyl)bis(2,6-dimethoxy-4,1-phenylene))bis(oxy))diacetate", "width": 1}, {"from": "(+/-)-syringaresinol", "to": "syringic aldehyde", "width": 4}, {"from": "(+/-)-syringaresinol", "to": "sinapinic acid", "width": 3}, {"from": "(+/-)-syringaresinol", "to": "syringenin", "width": 1}, {"from": "c17h16o3", "to": "5-methylfurfural", "width": 1}, {"from": "c17h16o3", "to": "d-glucomethylose", "width": 2}, {"from": "c17h16o3", "to": "l-rhamnose", "width": 2}, {"from": "3-(4-hydroxy-3-methoxyphenyl)acrylic acid", "to": "rel-methyl (2s,3s)-2-(4-(2-ethoxy-2-oxoethoxy)-3-methoxyphenyl)-5-formyl-7-methoxy-2,3-dihydrobenzofuran-3-carboxylate", "width": 4}, {"from": "3-(4-hydroxy-3-methoxyphenyl)acrylic acid", "to": "(\u00b1)-trans-dehydrodiferulic acid dimethyl ester", "width": 2}, {"from": "3-(4-hydroxy-3-methoxyphenyl)acrylic acid", "to": "methyl ferulate", "width": 1}, {"from": "(2e,2\u0027e)-3,3\u0027-(furan-2,5-diyl)diacrylic acid", "to": "(e,e)-3-[5-(2-methoxycarbonyl-vinyl)-furan-2-yl]-acrylic acid methyl ester", "width": 1}, {"from": "(2e,2\u0027e)-3,3\u0027-(furan-2,5-diyl)diacrylic acid", "to": "dimethyl 3,3\u0027-(furan-2,5-diyl)dipropionate", "width": 2}, {"from": "(2e,2\u0027e)-3,3\u0027-(furan-2,5-diyl)diacrylic acid", "to": "3,3\u0027-(naphthalene-1,4-diyl)dipropanoic acid", "width": 5}, {"from": "(2e,2\u0027e)-3,3\u0027-(furan-2,5-diyl)diacrylic acid", "to": "c18h22o5", "width": 4}, {"from": "(2e,2\u0027e)-3,3\u0027-(furan-2,5-diyl)diacrylic acid", "to": "c18h20o5", "width": 3}, {"from": "c18h22o5", "to": "3,3\u0027-(naphthalene-1,4-diyl)dipropanoic acid", "width": 1}, {"from": "c18h22o5", "to": "2,5-diformylfurane", "width": 5}, {"from": "c18h22o5", "to": "dimethyl 3,3\u0027-(furan-2,5-diyl)dipropionate", "width": 2}, {"from": "c18h22o5", "to": "(e,e)-3-[5-(2-methoxycarbonyl-vinyl)-furan-2-yl]-acrylic acid methyl ester", "width": 3}, {"from": "c18h22o5", "to": "c18h20o5", "width": 1}, {"from": "3-chlorocatechol", "to": "tetradecahydro-phenazine", "width": 2}, {"from": "3-chlorocatechol", "to": "c12h19no2", "width": 2}, {"from": "3-chlorocatechol", "to": "1,2,3,4,4a,5,10,10a-octahydro-phenazine", "width": 2}, {"from": "3-chlorocatechol", "to": "1,2,3,4,6,7,8,9-octahydrophenazine", "width": 2}, {"from": "3-chlorocatechol", "to": "cyclohexanone-2-ol", "width": 1}, {"from": "3-chlorocatechol", "to": "benzene-1,2-diol", "width": 1}, {"from": "2-[1-(5-methyl-furan-2-yl)-meth-(e)-ylidene]-cyclohexanone", "to": "5-methylfurfural", "width": 1}, {"from": "2-[1-(5-methyl-furan-2-yl)-meth-(e)-ylidene]-cyclohexanone", "to": "l-rhamnose", "width": 2}, {"from": "2-[1-(5-methyl-furan-2-yl)-meth-(e)-ylidene]-cyclohexanone", "to": "cyclohexanone", "width": 1}, {"from": "2-[1-(5-methyl-furan-2-yl)-meth-(e)-ylidene]-cyclohexanone", "to": "d-glucomethylose", "width": 2}, {"from": "tetradecahydro-phenazine", "to": "benzene-1,2-diol", "width": 1}, {"from": "tetradecahydro-phenazine", "to": "2-amino-phenol", "width": 1}, {"from": "c8h11no4", "to": "c11h19no4", "width": 3}, {"from": "c8h11no4", "to": "c11h17no4", "width": 2}, {"from": "c8h11no4", "to": "c11h21no4", "width": 4}, {"from": "c8h11no4", "to": "c9h15no3", "width": 3}, {"from": "c8h11no4", "to": "c10h13no5", "width": 1}, {"from": "(e,e)-3-[5-(2-methoxycarbonyl-vinyl)-furan-2-yl]-acrylic acid methyl ester", "to": "dimethyl 3,3\u0027-(furan-2,5-diyl)dipropionate", "width": 1}, {"from": "(e,e)-3-[5-(2-methoxycarbonyl-vinyl)-furan-2-yl]-acrylic acid methyl ester", "to": "methanol", "width": 1}, {"from": "(e,e)-3-[5-(2-methoxycarbonyl-vinyl)-furan-2-yl]-acrylic acid methyl ester", "to": "c18h20o5", "width": 2}, {"from": "(e,e)-3-[5-(2-methoxycarbonyl-vinyl)-furan-2-yl]-acrylic acid methyl ester", "to": "3,3\u0027-(naphthalene-1,4-diyl)dipropanoic acid", "width": 4}, {"from": "2-phenoxy-1-phenylethanone", "to": "benzoic acid", "width": 1}, {"from": "2-phenoxy-1-phenylethanone", "to": "c14h10(2)h2o2", "width": 1}, {"from": "ethylene glycol", "to": "2-methoxy-phenol", "width": 1}, {"from": "ethylene glycol", "to": "cellulose", "width": 1}, {"from": "pyrrolidine", "to": "acetophenone", "width": 1}, {"from": "pyrrolidine", "to": "(\u00b1)-1-(1-phenylethyl)pyrrolidine", "width": 1}, {"from": "pyrrolidine", "to": "2-methoxy-phenol", "width": 1}, {"from": "sinapinic acid", "to": "syringic aldehyde", "width": 1}, {"from": "sinapinic acid", "to": "rel-diethyl 2,2\u0027-((((1s,3ar,4s,6ar)-tetrahydro-1h,3h-furo[3,4-c]furan-1,4-diyl)bis(2,6-dimethoxy-4,1-phenylene))bis(oxy))diacetate", "width": 4}, {"from": "sinapinic acid", "to": "syringenin", "width": 1}, {"from": "ethanol", "to": "4-oxopentanoic acid ethyl ester", "width": 1}, {"from": "ethanol", "to": "ethyl n-valerate", "width": 1}, {"from": "ethanol", "to": "propylene glycol", "width": 1}, {"from": "c18h20o5", "to": "2,5-diformylfurane", "width": 4}, {"from": "c18h20o5", "to": "anthranilic acid", "width": 1}, {"from": "c18h20o5", "to": "2-(trimethylsilyl)phenyl trifluoromethanesulfonate", "width": 1}, {"from": "c18h20o5", "to": "dimethyl 3,3\u0027-(furan-2,5-diyl)dipropionate", "width": 1}, {"from": "c18h20o5", "to": "3,3\u0027-(naphthalene-1,4-diyl)dipropanoic acid", "width": 2}, {"from": "propylene glycol", "to": "methanol", "width": 1}, {"from": "propylene glycol", "to": "cellulose", "width": 1}, {"from": "rel-diethyl 2,2\u0027-((((1s,3ar,4s,6ar)-tetrahydro-1h,3h-furo[3,4-c]furan-1,4-diyl)bis(2,6-dimethoxy-4,1-phenylene))bis(oxy))diacetate", "to": "syringic aldehyde", "width": 5}, {"from": "rel-diethyl 2,2\u0027-((((1s,3ar,4s,6ar)-tetrahydro-1h,3h-furo[3,4-c]furan-1,4-diyl)bis(2,6-dimethoxy-4,1-phenylene))bis(oxy))diacetate", "to": "syringenin", "width": 2}, {"from": "d-fructose", "to": "levulinic acid", "width": 1}, {"from": "d-fructose", "to": "hydrogen", "width": 1}, {"from": "d-fructose", "to": "formic acid", "width": 1}, {"from": "d-fructose", "to": "cellulose", "width": 1}, {"from": "d-fructose", "to": "methyl lactate", "width": 1}, {"from": "d-fructose", "to": "lactic acid", "width": 1}, {"from": "2-hydroxy-1,2-bis(5-methyl-2-furanyl)-ethanone", "to": "5-methylfurfural", "width": 1}, {"from": "2-hydroxy-1,2-bis(5-methyl-2-furanyl)-ethanone", "to": "l-rhamnose", "width": 2}, {"from": "2-hydroxy-1,2-bis(5-methyl-2-furanyl)-ethanone", "to": "d-glucomethylose", "width": 2}, {"from": "1,2,3,4,4a,5,10,10a-octahydro-phenazine", "to": "2-amino-phenol", "width": 1}, {"from": "1,2,3,4,4a,5,10,10a-octahydro-phenazine", "to": "benzene-1,2-diol", "width": 1}, {"from": "furan-2,5-dicarboxylic acid", "to": "naphthalene-1,4-dicarboxylic acid", "width": 4}, {"from": "furan-2,5-dicarboxylic acid", "to": "c14h14o5", "width": 3}, {"from": "furan-2,5-dicarboxylic acid", "to": "2,5-diformylfurane", "width": 1}, {"from": "ethyl n-valerate", "to": "4-oxopentanoic acid ethyl ester", "width": 1}, {"from": "ethyl n-valerate", "to": "levulinic acid", "width": 1}, {"from": "c11h17no4", "to": "c11h19no4", "width": 1}, {"from": "c11h17no4", "to": "c10h13no5", "width": 1}, {"from": "c11h17no4", "to": "c9h15no3", "width": 1}, {"from": "c11h17no4", "to": "c11h21no4", "width": 2}, {"from": "c14h10(2)h2o2", "to": "benzoic acid", "width": 1}, {"from": "3,3\u0027-(naphthalene-1,4-diyl)dipropanoic acid", "to": "2,5-diformylfurane", "width": 6}, {"from": "3,3\u0027-(naphthalene-1,4-diyl)dipropanoic acid", "to": "dimethyl 3,3\u0027-(furan-2,5-diyl)dipropionate", "width": 3}, {"from": "2-methoxy-phenol", "to": "cyclohexane", "width": 1}, {"from": "2-methoxy-phenol", "to": "formic acid", "width": 1}, {"from": "2-methoxy-phenol", "to": "benzene-1,2-diol", "width": 1}, {"from": "2-methoxy-phenol", "to": "cyclohexanone", "width": 1}, {"from": "2-methoxy-phenol", "to": "1-(3,4-dimethoxyphenyl)-2-(methoxyphenoxy)propane-1,3-diol", "width": 1}, {"from": "2-methoxy-phenol", "to": "cyclohexanol", "width": 1}, {"from": "2-hydroxymethyl-5-methylfuran", "to": "5-methylfurfural", "width": 1}, {"from": "2-hydroxymethyl-5-methylfuran", "to": "2,5-dimethylfuran", "width": 1}, {"from": "2-hydroxymethyl-5-methylfuran", "to": "l-rhamnose", "width": 2}, {"from": "2-hydroxymethyl-5-methylfuran", "to": "d-glucomethylose", "width": 2}, {"from": "2-hydroxymethyl-5-methylfuran", "to": "formic acid", "width": 1}, {"from": "2-hydroxymethyl-5-methylfuran", "to": "5-methyl-2-furfuryl acetate", "width": 1}, {"from": "benzene-1,2-diol", "to": "1,2,3,4,6,7,8,9-octahydrophenazine", "width": 1}, {"from": "benzene-1,2-diol", "to": "1-(3,4-dimethoxyphenyl)-2-(methoxyphenoxy)propane-1,3-diol", "width": 1}, {"from": "c14h14o5", "to": "naphthalene-1,4-dicarboxylic acid", "width": 1}, {"from": "furfural", "to": "d-xylose", "width": 1}, {"from": "furfural", "to": "cellulose", "width": 1}, {"from": "furfural", "to": "methanol", "width": 1}, {"from": "furfural", "to": "levulinic acid", "width": 1}, {"from": "furfural", "to": "l-rhamnose", "width": 1}, {"from": "furfural", "to": "formic acid", "width": 1}, {"from": "diphenylether", "to": "cyclohexanol", "width": 1}, {"from": "diphenylether", "to": "cyclohexanone", "width": 1}, {"from": "diphenylether", "to": "cyclohexane", "width": 1}, {"from": "d-glucomethylose", "to": "c12h14o2", "width": 2}, {"from": "d-glucomethylose", "to": "2,6-bis-((\u03be)-5-methyl-furfurylidene)-cyclohexanone", "width": 2}, {"from": "d-glucomethylose", "to": "c11h14o2", "width": 2}, {"from": "d-glucomethylose", "to": "c15h14o3", "width": 2}, {"from": "d-glucomethylose", "to": "c16h16o3", "width": 2}, {"from": "d-glucomethylose", "to": "5-methyl-2-furfuryl acetate", "width": 3}, {"from": "d-glucomethylose", "to": "2,5-dimethylfuran", "width": 4}, {"from": "d-glucomethylose", "to": "5-methylfurfural", "width": 1}, {"from": "c9h15no3", "to": "c10h13no5", "width": 2}, {"from": "benzoic acid methyl ester", "to": "benzoic acid", "width": 1}, {"from": "benzoic acid methyl ester", "to": "methanol", "width": 1}, {"from": "benzoic acid methyl ester", "to": "acetophenone", "width": 1}, {"from": "c12h14o", "to": "1,4-dimethyl-1,4-dihydro-1,4-epoxynaphthalene", "width": 1}, {"from": "c12h14o", "to": "anthranilic acid", "width": 2}, {"from": "c12h14o", "to": "2-(trimethylsilyl)phenyl trifluoromethanesulfonate", "width": 2}, {"from": "c12h14o", "to": "2,5-dimethylfuran", "width": 2}, {"from": "1-(3,4-dimethoxyphenyl)-2-(methoxyphenoxy)propane-1,3-diol", "to": "cyclohexane", "width": 1}, {"from": "1-(3,4-dimethoxyphenyl)-2-(methoxyphenoxy)propane-1,3-diol", "to": "cyclohexanone", "width": 1}, {"from": "anthranilic acid", "to": "1,4-dimethyl-1,4-dihydro-1,4-epoxynaphthalene", "width": 1}, {"from": "c12h14o2", "to": "l-rhamnose", "width": 2}, {"from": "c12h14o2", "to": "5-methylfurfural", "width": 1}, {"from": "rel-methyl (2s,3s)-2-(4-(2-ethoxy-2-oxoethoxy)-3-methoxyphenyl)-5-formyl-7-methoxy-2,3-dihydrobenzofuran-3-carboxylate", "to": "methyl ferulate", "width": 3}, {"from": "rel-methyl (2s,3s)-2-(4-(2-ethoxy-2-oxoethoxy)-3-methoxyphenyl)-5-formyl-7-methoxy-2,3-dihydrobenzofuran-3-carboxylate", "to": "(\u00b1)-trans-dehydrodiferulic acid dimethyl ester", "width": 2}, {"from": "l-rhamnose", "to": "lactic acid", "width": 1}, {"from": "l-rhamnose", "to": "5-methyl-2-furfuryl acetate", "width": 3}, {"from": "l-rhamnose", "to": "c15h14o3", "width": 2}, {"from": "l-rhamnose", "to": "c16h16o3", "width": 2}, {"from": "l-rhamnose", "to": "5-methylfurfural", "width": 1}, {"from": "l-rhamnose", "to": "2,6-bis-((\u03be)-5-methyl-furfurylidene)-cyclohexanone", "width": 2}, {"from": "l-rhamnose", "to": "2,5-dimethylfuran", "width": 4}, {"from": "l-rhamnose", "to": "hydrogen", "width": 1}, {"from": "l-rhamnose", "to": "c11h14o2", "width": 2}, {"from": "c16h16o3", "to": "5-methylfurfural", "width": 1}, {"from": "methyl lactate", "to": "d-mannose", "width": 1}, {"from": "methyl lactate", "to": "methanol", "width": 1}, {"from": "methyl lactate", "to": "d-xylose", "width": 1}, {"from": "syringenin", "to": "syringic aldehyde", "width": 2}, {"from": "dimethyl 3,3\u0027-(furan-2,5-diyl)dipropionate", "to": "2,5-diformylfurane", "width": 2}, {"from": "2,5-dimethylfuran", "to": "formic acid", "width": 1}, {"from": "2,5-dimethylfuran", "to": "1,4-dimethyl-1,4-dihydro-1,4-epoxynaphthalene", "width": 1}, {"from": "2,5-dimethylfuran", "to": "5-methyl-2-furfuryl acetate", "width": 1}, {"from": "cyclohexanone", "to": "(benzyloxy)benzene", "width": 1}, {"from": "cyclohexanone", "to": "2,6-bis-((\u03be)-5-methyl-furfurylidene)-cyclohexanone", "width": 1}, {"from": "2-hydroxyresorcinol", "to": "cyclohexanone-2-ol", "width": 1}, {"from": "2-hydroxyresorcinol", "to": "c12h19no2", "width": 2}, {"from": "2-hydroxyresorcinol", "to": "1,2,3,4,6,7,8,9-octahydrophenazine", "width": 2}, {"from": "2-hydroxyresorcinol", "to": "3-methocycatechol", "width": 1}, {"from": "2-(trimethylsilyl)phenyl trifluoromethanesulfonate", "to": "1,4-dimethyl-1,4-dihydro-1,4-epoxynaphthalene", "width": 1}, {"from": "hydrogen", "to": "d-xylose", "width": 1}, {"from": "hydrogen", "to": "d-mannose", "width": 1}, {"from": "5-methylfurfural", "to": "5-methyl-2-furfuryl acetate", "width": 2}, {"from": "5-methylfurfural", "to": "c11h14o2", "width": 1}, {"from": "5-methylfurfural", "to": "2,6-bis-((\u03be)-5-methyl-furfurylidene)-cyclohexanone", "width": 1}, {"from": "5-methylfurfural", "to": "c15h14o3", "width": 1}, {"from": "5-methylfurfural", "to": "formic acid", "width": 1}, {"from": "cellulose", "to": "formic acid", "width": 1}, {"from": "cellulose", "to": "lactic acid", "width": 1}, {"from": "cellulose", "to": "d-mannose", "width": 1}, {"from": "cellulose", "to": "levulinic acid", "width": 1}, {"from": "levulinic acid", "to": "4-oxopentanoic acid ethyl ester", "width": 1}, {"from": "c11h19no4", "to": "c10h13no5", "width": 2}, {"from": "c11h19no4", "to": "c11h21no4", "width": 1}, {"from": "c12h19no2", "to": "cyclohexanone-2-ol", "width": 1}, {"from": "c12h19no2", "to": "3-methocycatechol", "width": 2}, {"from": "(\u00b1)-trans-dehydrodiferulic acid dimethyl ester", "to": "methyl ferulate", "width": 1}, {"from": "lactic acid", "to": "d-mannose", "width": 1}, {"from": "lactic acid", "to": "d-xylose", "width": 1}, {"from": "syringic aldehyde", "to": "formic acid", "width": 1}, {"from": "cyclohexane", "to": "(benzyloxy)benzene", "width": 1}, {"from": "cyclohexanol", "to": "(benzyloxy)benzene", "width": 1}, {"from": "c10h13no5", "to": "c11h21no4", "width": 3}, {"from": "3-methocycatechol", "to": "1,2,3,4,6,7,8,9-octahydrophenazine", "width": 2}, {"from": "3-methocycatechol", "to": "cyclohexanone-2-ol", "width": 1}, {"from": "cyclohexanone-2-ol", "to": "1,2,3,4,6,7,8,9-octahydrophenazine", "width": 1}, {"from": "2-amino-phenol", "to": "1,2,3,4,6,7,8,9-octahydrophenazine", "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
