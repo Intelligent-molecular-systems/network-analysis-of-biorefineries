@@ -40,7 +40,9 @@ def analyse(df):
     largest_connected_component = graph.subgraph(max(nx.connected_components(graph), key=len)).copy()
     # Calculate clustering coefficient
     clustering_coefficient = nx.average_clustering(largest_connected_component)
+    global_clustering_coefficient = nx.transitivity(largest_connected_component)
     print("Average clustering coefficient is:", clustering_coefficient)
+    print("Global clustering coefficient is:", global_clustering_coefficient)
     # Calculate omega metric
     # With this settings (niter=3 and nrand=3) this part can run about 800 seconds. (Comment out if not needed
     # to speed up the calculations)

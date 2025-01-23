@@ -35,7 +35,7 @@ def plot_components_size_distribution(component_sizes, axis, a):
     axis[a].yaxis.grid(True)
 
 
-def plot_comparison_with_NOC_avg_shortest_path_length(x, y, data_file="resources/NOC data/average_path_length.csv"):
+def plot_comparison_with_NOC_avg_shortest_path_length(x, y, data_file="../resources/NOC data/average_path_length.csv"):
     """
     Helper method. Used in `graph_property.py`. Plots the average shortest path length using given x and y.
     Plots the average shortest path length using data from the data_file.
